@@ -34,7 +34,7 @@ We can also specify `has_one` or `has_many` associations for nested documents:
 
     zoo = Zoo.new(lions: [{name: 'Hetty'}],
                   zebras: [{name: 'Lisa'}],
-                  zookeeper: {name: 'Russell' d})
+                  zookeeper: {name: 'Russell'})
 
     zoo.lions.first.class # => Lion
     zoo.lions.first.name  # => "Hetty"
