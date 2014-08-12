@@ -49,6 +49,18 @@ module Structural
         end
       end
 
+      class Integer < Cast
+        def self.type
+          ::Integer
+        end
+
+        def conversion
+          value.to_i
+        end
+
+        TypeCasts.register(self)
+      end
+
       class Date < Cast
         def self.type
           ::Date
