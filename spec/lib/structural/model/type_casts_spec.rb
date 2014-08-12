@@ -14,6 +14,14 @@ module Structural
 
       end
 
+      describe Integer do
+        subject { Integer.new("2").cast }
+
+        it 'casts strings to integers' do
+          expect(subject).to eql(2)
+        end
+      end
+
       describe Date do
         it 'casts strings to dates' do
           Date.new("06-06-1983").cast.should eq ::Date.new(1983, 6, 6)

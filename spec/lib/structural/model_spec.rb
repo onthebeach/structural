@@ -59,7 +59,7 @@ describe Structural::Model do
     end
 
     it 'allows default values' do
-      model.quux.should be_false
+      model.quux.should eql(false)
     end
 
     describe "typecast option" do
@@ -116,8 +116,8 @@ describe Structural::Model do
   describe "#fields are present methods" do
     it 'allows you to check if fields are present' do
       model = TestModel.new(:foo => 1)
-      model.foo?.should be_true
-      model.bar?.should be_false
+      model.foo?.should eql(true)
+      model.bar?.should eql(false)
     end
   end
 
@@ -153,7 +153,7 @@ describe Structural::Model do
 
   describe "#to_proc" do
     it 'eta expands the model class into its constructor' do
-      [{},{}].map(&TestModel).all? { |m| m.is_a? TestModel }.should be_true
+      [{},{}].map(&TestModel).all? { |m| m.is_a? TestModel }.should eql(true)
     end
   end
 end
