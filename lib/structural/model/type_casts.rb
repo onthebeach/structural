@@ -61,6 +61,18 @@ module Structural
         TypeCasts.register(self)
       end
 
+      class Float < Cast
+        def self.type
+          ::Float
+        end
+
+        def conversion
+          value.to_f
+        end
+
+        TypeCasts.register(self)
+      end
+
       class Date < Cast
         def self.type
           ::Date
