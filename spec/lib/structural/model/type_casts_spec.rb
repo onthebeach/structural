@@ -22,6 +22,14 @@ module Structural
         end
       end
 
+      describe Float do
+        subject { Float.new("2.0").cast }
+
+        it 'casts strings to floats' do
+          expect(subject).to eql(2.0)
+        end
+      end
+
       describe Date do
         it 'casts strings to dates' do
           Date.new("06-06-1983").cast.should eq ::Date.new(1983, 6, 6)
