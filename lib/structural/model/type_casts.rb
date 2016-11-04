@@ -72,7 +72,6 @@ module Structural
         end
 
         def self.cast(value)
-          puts value.inspect
           ::Time.parse value
         end
 
