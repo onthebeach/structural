@@ -11,7 +11,7 @@ module Structural
     end
 
     def unset(*keys)
-      self.class.new(data.except(*keys.map(&:to_s)))
+      self.class.new(data.except(*keys.map(&:to_sym)))
     end
 
     def eql? other

@@ -3,7 +3,7 @@ module Structural
     def self.hashify(data)
       {}.tap do |hash|
         data.each do |key, value|
-          hash[key.to_s] = as_data(value)
+          hash[key.to_sym] = as_data(value)
         end
       end
     end

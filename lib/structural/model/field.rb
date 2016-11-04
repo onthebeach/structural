@@ -30,7 +30,7 @@ module Structural
       end
 
       def key
-        options.fetch(:key, name).to_s
+        options.fetch(:key, name).to_sym
       end
 
       def default_value
