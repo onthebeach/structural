@@ -1,11 +1,14 @@
 module Structural
   module Model
     module TypeCasts
-      def self.cast(type, value)
-        casts.fetch(type, Identity).new(value).cast
-      end
 
-      protected
+      def self.cast(type, value)
+        if value.is_a?(type)
+          value
+        else
+          casts.fetch(type, Identity).cast(value)
+        end
+      end
 
       def self.register(cast)
         casts[cast.type] = cast
@@ -17,92 +20,71 @@ module Structural
         @casts ||= {}
       end
 
-      class Cast
-        def initialize(value)
-          @value = value
-        end
-
-        def cast
-          value.is_a?(type) ? value : conversion
-        end
-
-        def type
-          self.class.type
-        end
-
-        def conversion
-          raise NotImplementedError
-        end
-
-        private
-
+      class Identity
         def self.type
-          raise NotImplementedError
+          ::Identity
         end
 
-        attr_reader :value
-      end
-
-      class Identity < Cast
-        def cast
+        def self.cast(value)
           value
         end
       end
 
-      class Integer < Cast
+      class Integer
         def self.type
           ::Integer
         end
 
-        def conversion
+        def self.cast(value)
           value.to_i
         end
 
         TypeCasts.register(self)
       end
 
-      class Float < Cast
+      class Float
         def self.type
           ::Float
         end
 
-        def conversion
+        def self.cast(value)
           value.to_f
         end
 
         TypeCasts.register(self)
       end
 
-      class Date < Cast
+      class Date
         def self.type
           ::Date
         end
 
-        def conversion
+        def self.cast(value)
           ::Date.parse value
         end
 
         TypeCasts.register(self)
       end
 
-      class Time < Cast
+      class Time
         def self.type
           ::Time
         end
 
-        def conversion
+        def self.cast(value)
+          puts value.inspect
           ::Time.parse value
         end
 
         TypeCasts.register(self)
       end
 
-      class Money < Cast
+      class Money
         def self.type
           ::Money
         end
 
-        def conversion
+        def self.cast(value)
           ::Money.new value.to_i
         end
 

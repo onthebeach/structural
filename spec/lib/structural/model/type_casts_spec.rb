@@ -3,19 +3,8 @@ require 'spec_helper'
 module Structural
   module Model
     module TypeCasts
-      describe Cast do
-        it 'requires a type' do
-          expect { Cast.new(1).type }.to raise_error NotImplementedError
-        end
-
-        it 'requires a conversion' do
-          expect { Cast.new(1).conversion }.to raise_error NotImplementedError
-        end
-
-      end
-
       describe Integer do
-        subject { Integer.new("2").cast }
+        subject { Integer.cast("2") }
 
         it 'casts strings to integers' do
           expect(subject).to eql(2)
@@ -23,7 +12,7 @@ module Structural
       end
 
       describe Float do
-        subject { Float.new("2.0").cast }
+        subject { Float.cast("2.0") }
 
         it 'casts strings to floats' do
           expect(subject).to eql(2.0)
@@ -32,25 +21,20 @@ module Structural
 
       describe Date do
         it 'casts strings to dates' do
-          Date.new("06-06-1983").cast.should eq ::Date.new(1983, 6, 6)
+          Date.cast("06-06-1983").should eq ::Date.new(1983, 6, 6)
         end
       end
 
       describe Time do
         it 'casts strings to Times' do
-          Time.new("06-06-1983").cast.should eq ::Time.parse("06-06-1983")
-        end
-
-        it 'does nothing if the value is already of the correct type' do
-          time = ::Time.now
-          Time.new(time).cast.should eq time
+          Time.cast("06-06-1983").should eq ::Time.parse("06-06-1983")
         end
       end
 
       describe Money do
         it 'ints or strings to Money' do
-          Money.new("500").cast.should eq ::Money.new(5_00)
-          Money.new(500).cast.should eq ::Money.new(5_00)
+          Money.cast("500").should eq ::Money.new(5_00)
+          Money.cast(500).should eq ::Money.new(5_00)
         end
       end
     end

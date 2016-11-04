@@ -26,7 +26,7 @@ module Structural
       end
 
       def cast(value)
-        TypeCasts.cast(options.fetch(:type, false), value)
+        TypeCasts.cast(options.fetch(:type, value.class), value)
       end
 
       def key
