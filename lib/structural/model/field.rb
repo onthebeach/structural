@@ -38,7 +38,7 @@ module Structural
       end
 
       def default_value
-        proc do
+        @default_value ||= proc do
           if default?
             default
           else
