@@ -8,7 +8,7 @@ module Structural
       end
 
       def define
-        Definer.method_memoize(model, name) { |data| value_of(data) }
+        Definer.method_memoize(model, name, ivar_name) { |data| value_of(data) }
         Definer.method(model, "#{name}?") { |obj| presence_of(obj.data) }
         hook_define
       end
@@ -33,11 +33,15 @@ module Structural
         options.fetch(:key, name).to_sym
       end
 
+      def ivar_name
+        @ivar_name ||= "@#{@name}"
+      end
+
       def default_value
         proc do
           if default?
             default
-          else 
+          else
             raise MissingAttributeError, key
           end
         end

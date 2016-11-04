@@ -1,10 +1,10 @@
 module Structural
   module Model
     class Definer
-      def self.method_memoize(context, name, &value_block)
+      def self.method_memoize(context, name, ivar_name, &value_block)
         context.class_eval do
           define_method(name) do
-            memoize(name, &value_block)
+            memoize(ivar_name, &value_block)
           end
         end
       end
