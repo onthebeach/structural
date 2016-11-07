@@ -10,6 +10,7 @@ class TestModel
 
   field :foo
   field :bar, :key => 'baz'
+  field :nested_hash
   field :quux, :default => false
   field :date_of_birth, :type => Date
   field :empty_date, :type => Date
@@ -33,6 +34,7 @@ describe Structural::Model do
       :foo => 3,
       :baz => 6,
       :quxx => 8,
+      :nested_hash => {1 => :one, 2 => :two},
       :test_model => {},
       :date_of_birth => '06-06-1983',
       :aliased_model => {'yak' => 11},
@@ -60,6 +62,10 @@ describe Structural::Model do
 
     it 'allows default values' do
       model.quux.should eql(false)
+    end
+
+    it 'leaves nested hashes unmodified' do
+      model.nested_hash.should eql({1 => :one, 2 => :two})
     end
 
     describe "typecast option" do
