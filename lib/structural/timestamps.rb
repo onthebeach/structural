@@ -6,7 +6,7 @@ module Structural
     end
 
     def initialize(data = {})
-      super data.merge(:created_at => data.fetch('created_at', Time.now))
+      super data.merge(:created_at => data.fetch(:created_at, Time.now))
     end
 
     def set(values)

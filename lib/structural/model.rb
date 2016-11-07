@@ -11,7 +11,7 @@ module Structural
     end
 
     def unset(*keys)
-      self.class.new(data.except(*keys.map(&:to_s)))
+      self.class.new(data.except(*keys.map(&:to_sym)))
     end
 
     def eql? other
@@ -29,8 +29,8 @@ module Structural
       base.extend(Descriptor)
     end
 
-    def memoize(f, &b)
-      instance_variable_get("@#{f}") || instance_variable_set("@#{f}", b.call(data))
+    def memoize(ivar, &b)
+      instance_variable_get(ivar) || instance_variable_set(ivar, b.call(data))
     end
   end
 end
