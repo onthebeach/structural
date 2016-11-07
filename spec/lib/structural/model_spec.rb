@@ -15,6 +15,7 @@ class TestModel
   field :date_of_birth, :type => Date
   field :empty_date, :type => Date
   field :christmas, :default => Date.new(2014,12,25), :type => Date
+  field :time_stamp, :type => Time
 
   has_one :aliased_model, :type => NestedModel
   has_one :nested_model, :key => 'aliased_model'
@@ -39,7 +40,8 @@ describe Structural::Model do
       :date_of_birth => '06-06-1983',
       :aliased_model => {'yak' => 11},
       :nested_models => [{'yak' => 11}, {:yak => 14}],
-      :extra_nested_model => { :cats => "MIAOW" }
+      :extra_nested_model => { :cats => "MIAOW" },
+      :time_stamp => '2015-01-27T13:13:13+00:00'
     )
   end
 
@@ -72,6 +74,14 @@ describe Structural::Model do
       it 'typecasts to the provided type if a cast exists' do
         model.date_of_birth.should be_a Date
         model.christmas.should be_a Date
+      end
+
+      it 'parses the date correctly' do
+        model.date_of_birth.should eql Date.new(1983, 6, 6)
+      end
+
+      it 'parses the time correctly' do
+        model.time_stamp.should eql Time.new(2015, 1, 27, 13, 13, 13, '+00:00')
       end
     end
   end
