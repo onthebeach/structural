@@ -20,7 +20,9 @@ class TestModel
   has_one :aliased_model, :type => NestedModel
   has_one :nested_model, :key => 'aliased_model'
   has_one :extra_nested_model
+  has_one :nested_model_with_invalid_default_type, default: nil
   has_one :nested_model_with_default, default: { name: 'Michael' }
+  has_one :missing_nested_model_without_default
   has_one :test_model
   has_many :nested_models
 
@@ -112,6 +114,16 @@ describe Structural::Model do
     it "allows default values" do
       model.nested_model_with_default.name.should eq 'Michael'
       model.nested_model_with_default.surname.should be_nil
+    end
+    it "fails if passed a non-hash as default" do
+      expect {
+        model.nested_model_with_invalid_default_type
+      }.to raise_error(Structural::InvalidDefaultTypeError)
+    end
+    it "fails for missing associations without defaults" do
+      expect {
+        model.missing_nested_model_without_default
+      }.to raise_error(Structural::MissingAttributeError)
     end
   end
 

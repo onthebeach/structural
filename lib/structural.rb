@@ -3,6 +3,7 @@ require 'money'
 
 require 'structural/version'
 require 'structural/missing_attribute_error'
+require 'structural/invalid_default_type_error'
 require 'structural/hashifier'
 require 'structural/model/definer'
 require 'structural/model/descriptor'
