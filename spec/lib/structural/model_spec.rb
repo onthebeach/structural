@@ -20,12 +20,20 @@ class TestModel
   has_one :aliased_model, :type => NestedModel
   has_one :nested_model, :key => 'aliased_model'
   has_one :extra_nested_model
+  has_one :nested_model_with_default, default: { name: 'Michael' }
   has_one :test_model
   has_many :nested_models
 
   class ExtraNestedModel
     include Structural::Model
     field :cats
+  end
+
+  class NestedModelWithDefault
+    include Structural::Model
+
+    field :name, default: nil
+    field :surname, default: nil
   end
 end
 
@@ -100,6 +108,10 @@ describe Structural::Model do
     end
     it "allows recursively defined models" do
       model.test_model.should be_a TestModel
+    end
+    it "allows default values" do
+      model.nested_model_with_default.name.should eq 'Michael'
+      model.nested_model_with_default.surname.should be_nil
     end
   end
 
