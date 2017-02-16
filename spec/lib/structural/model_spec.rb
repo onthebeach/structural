@@ -3,6 +3,14 @@ require 'spec_helper'
 class NestedModel
   include Structural::Model
   field :yak
+  field :name, :default => nil
+  field :surname, :default => nil
+end
+
+class SeparateClass
+  def self.as_hash
+    { :name => 'Michael' }
+  end
 end
 
 class TestModel
@@ -20,22 +28,17 @@ class TestModel
   has_one :aliased_model, :type => NestedModel
   has_one :nested_model, :key => 'aliased_model'
   has_one :extra_nested_model
-  has_one :nested_model_with_invalid_default_type, default: nil
-  has_one :nested_model_with_default, default: { name: 'Michael' }
-  has_one :missing_nested_model_without_default
+  has_one :nested_with_invalid_default, :default => nil
+  has_one :nested_with_hash_default, :default => { name: 'Michael' }, :type => NestedModel
+  has_one :nested_with_hash_proc_default, :default => Proc.new { SeparateClass.as_hash }, :type => NestedModel
+  has_one :nested_with_invalid_proc_default, :default => Proc.new { SeparateClass.new }, :type => NestedModel
+  has_one :missing_nested_without_default
   has_one :test_model
   has_many :nested_models
 
   class ExtraNestedModel
     include Structural::Model
     field :cats
-  end
-
-  class NestedModelWithDefault
-    include Structural::Model
-
-    field :name, default: nil
-    field :surname, default: nil
   end
 end
 
@@ -97,32 +100,53 @@ describe Structural::Model do
   end
 
   describe ".has_one" do
-    it "allows nested models" do
+    it 'allows nested models' do
       model.aliased_model.should be_a NestedModel
     end
-    it "allows nested models" do
+
+    it 'allows nested models' do
       model.nested_model.should be_a NestedModel
       model.nested_model.yak.should eq 11
     end
-    it "allows associations to be nested within the class" do
+
+    it 'allows associations to be nested within the class' do
       model.extra_nested_model.should be_a TestModel::ExtraNestedModel
       model.extra_nested_model.cats.should eq 'MIAOW'
     end
-    it "allows recursively defined models" do
+
+    it 'allows recursively defined models' do
       model.test_model.should be_a TestModel
     end
-    it "allows default values" do
-      model.nested_model_with_default.name.should eq 'Michael'
-      model.nested_model_with_default.surname.should be_nil
+
+    it 'allows default values as a hash' do
+      model.nested_with_hash_default.name.should eq 'Michael'
+      model.nested_with_hash_default.surname.should be_nil
     end
-    it "fails if passed a non-hash as default" do
+
+    context 'when passing a Proc as a default' do
+      it 'allows the default' do
+        model.nested_with_hash_proc_default.name.should eq 'Michael'
+        model.nested_with_hash_default.surname.should be_nil
+      end
+
+      context 'when the Proc does not return a Hash' do
+        it 'raises an error' do
+          expect {
+            model.nested_with_invalid_proc_default
+          }.to raise_error(Structural::InvalidDefaultTypeError)
+        end
+      end
+    end
+
+    it 'fails if passed a non-hash as default' do
       expect {
-        model.nested_model_with_invalid_default_type
+        model.nested_with_invalid_default
       }.to raise_error(Structural::InvalidDefaultTypeError)
     end
-    it "fails for missing associations without defaults" do
+
+    it 'fails for missing associations without defaults' do
       expect {
-        model.missing_nested_model_without_default
+        model.missing_nested_without_default
       }.to raise_error(Structural::MissingAttributeError)
     end
   end

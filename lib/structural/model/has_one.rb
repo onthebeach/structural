@@ -7,13 +7,16 @@ module Structural
       end
 
       def default
-        value = super
+        valid_type_check(super)
+      end
 
-        if value.is_a? Hash
-          value
-        else
-          raise Structural::InvalidDefaultTypeError
-        end
+      private
+
+      def valid_type_check(v)
+        case v
+        when Hash then v
+        when Proc then valid_type_check(v.call)
+        else raise Structural::InvalidDefaultTypeError end
       end
     end
   end
